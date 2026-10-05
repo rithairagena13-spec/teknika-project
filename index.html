@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="box">
+        <header>
+            <h1>TaskFlow</h1>
+            <p id="counter">3 left</p>
+        </header>
+
+        <main>
+            <!-- FORM -->
+            <form id="form">
+                <input type="text" id="input" placeholder="New task..." required>
+                <button type="submit" id="add">Add</button>
+            </form>
+
+            <!-- FILTERS -->
+            <div class="tabs">
+                <button class="btn active">All</button>
+                <button class="btn">Active</button>
+                <button class="btn">Done</button>
+            </div>
+
+            <!-- TASK LIST -->
+            <ul id="list">
+                <!-- Task 1 -->
+                <li class="item">
+                    <div class="row">
+                        <input type="checkbox" id="t1" class="check">
+                        <label for="t1" class="text">Learn HTML</label>
+                    </div>
+                    <div class="actions">
+                        <button class="edit">Edit</button>
+                        <button class="del">Delete</button>
+                    </div>
+                </li>
+
+                <!-- Task 2 -->
+                <li class="item done">
+                    <div class="row">
+                        <input type="checkbox" id="t2" class="check" checked>
+                        <label for="t2" class="text">Create folder</label>
+                    </div>
+                    <div class="actions">
+                        <button class="edit">Edit</button>
+                        <button class="del">Delete</button>
+                    </div>
+                </li>
+
+                <!-- Task 3 -->
+                <li class="item">
+                    <div class="row">
+                        <input type="checkbox" id="t3" class="check">
+                        <label for="t3" class="text">Read rules</label>
+                    </div>
+                    <div class="actions">
+                        <button class="edit">Edit</button>
+                        <button class="del">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </main>
+    </div>
+
+</body>
+</html>

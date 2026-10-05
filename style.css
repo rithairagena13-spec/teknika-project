@@ -1,0 +1,174 @@
+/* CSS VARIABLES FOR CLEAN COLORS */
+:root {
+    --bg-page: #f1f5f9;
+    --bg-box: #ffffff;
+    --primary: #0d9488;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+}
+
+/* GLOBAL RESETS */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+}
+
+/* MOBILE-FIRST BOX LAYOUT */
+.box {
+    background-color: var(--bg-box);
+    width: 100%;
+    max-width: 500px;
+    padding: 24px;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
+}
+
+/* HEADER STYLE */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+#counter {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* FORM LAYOUT */
+#form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+#input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+#input:focus {
+    border-color: var(--primary);
+}
+
+#add {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* FILTER TABS */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+}
+
+.btn {
+    background: none;
+    border: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.btn.active {
+    background-color: #ccfbf1;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* TASK ITEMS STYLES */
+#list {
+    list-style: none;
+    display: flex;
+    flex-col direction: column;
+    display: block;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.check {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.text {
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* COMPLETE STATUS STRIKETHROUGH */
+.item.done .text {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+/* ACTION BUTTONS */
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.edit, .del {
+    background: none;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.edit {
+    color: var(--text-muted);
+}
+
+.del {
+    color: #ef4444;
+}
