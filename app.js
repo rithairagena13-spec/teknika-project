@@ -1,6 +1,6 @@
-// =====================================
+
 // FIREBASE IMPORTS
-// =====================================
+
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
@@ -15,9 +15,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 
-// =====================================
+
 // FIREBASE CONFIGURATION
-// =====================================
+
 
 const firebaseConfig = {
     apiKey: "REMOVED_API_KEY",
@@ -29,9 +29,9 @@ const firebaseConfig = {
 };
 
 
-// =====================================
+
 // INITIALIZE FIREBASE
-// =====================================
+
 
 const app = initializeApp(firebaseConfig);
 
@@ -40,16 +40,15 @@ const db = getFirestore(app);
 const tasksCollection = collection(db, "tasks");
 
 
-// =====================================
 // LOCAL DATA MODEL
-// =====================================
+
 
 let tasks = [];
 
 
-// =====================================
+
 // CONNECT TO HTML ELEMENTS
-// =====================================
+
 
 const form = document.getElementById("form");
 const input = document.getElementById("input");
@@ -57,9 +56,9 @@ const list = document.getElementById("list");
 const counter = document.getElementById("counter");
 
 
-// =====================================
+
 // RENDER TASKS
-// =====================================
+
 
 function renderTasks() {
 
@@ -128,9 +127,9 @@ function renderTasks() {
 }
 
 
-// =====================================
+
 // LOAD TASKS FROM FIRESTORE
-// =====================================
+
 
 async function loadTasks() {
 
@@ -166,9 +165,9 @@ async function loadTasks() {
 }
 
 
-// =====================================
+
 // ADD NEW TASK
-// =====================================
+
 
 form.addEventListener("submit", async (event) => {
 
@@ -239,10 +238,10 @@ form.addEventListener("submit", async (event) => {
 });
 
 
-// =====================================
+
 // TASK ACTIONS
 // DELETE / COMPLETE / EDIT
-// =====================================
+
 
 list.addEventListener("click", async (event) => {
 
@@ -268,9 +267,9 @@ list.addEventListener("click", async (event) => {
     if (taskIndex === -1) return;
 
 
-    // =================================
+    
     // DELETE TASK
-    // =================================
+   
 
     if (event.target.classList.contains("del")) {
 
@@ -315,9 +314,9 @@ list.addEventListener("click", async (event) => {
     }
 
 
-    // =================================
+   
     // COMPLETE TASK
-    // =================================
+   
 
     if (event.target.classList.contains("check")) {
 
@@ -356,9 +355,8 @@ list.addEventListener("click", async (event) => {
     }
 
 
-    // =================================
     // EDIT TASK
-    // =================================
+    
 
     if (event.target.classList.contains("edit")) {
 
@@ -423,9 +421,8 @@ list.addEventListener("click", async (event) => {
 });
 
 
-// =====================================
 // FILTER BUTTONS
-// =====================================
+
 
 const filterButtons = document.querySelectorAll(".tabs .btn");
 
@@ -530,8 +527,8 @@ function renderFilteredTasks(filteredTasks) {
 }
 
 
-// =====================================
+
 // START TASKFLOW
-// =====================================
+
 
 loadTasks();
