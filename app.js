@@ -1,111 +1,537 @@
-//  LOCAL DATA MODEL (OUR SOURCE OF TRUTH IN MEMORY)
-let tasks = [
-    { id: "t1", title: "Learn HTML", completed: false },
-    { id: "t2", title: "Create folder", completed: true },
-    { id: "t3", title: "Read rules", completed: false }
-];
+// =====================================
+// FIREBASE IMPORTS
+// =====================================
 
-// 🔗 CONNECTING TO OUR HTML ELEMENTS
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+// =====================================
+// FIREBASE CONFIGURATION
+// =====================================
+
+const firebaseConfig = {
+    apiKey: "REMOVED_API_KEY",
+    authDomain: "taskflow-app-5b420.firebaseapp.com",
+    projectId: "taskflow-app-5b420",
+    storageBucket: "taskflow-app-5b420.firebasestorage.app",
+    messagingSenderId: "941988575431",
+    appId: "1:941988575431:web:5dffb053724685791766e2"
+};
+
+
+// =====================================
+// INITIALIZE FIREBASE
+// =====================================
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const tasksCollection = collection(db, "tasks");
+
+
+// =====================================
+// LOCAL DATA MODEL
+// =====================================
+
+let tasks = [];
+
+
+// =====================================
+// CONNECT TO HTML ELEMENTS
+// =====================================
+
 const form = document.getElementById("form");
 const input = document.getElementById("input");
 const list = document.getElementById("list");
 const counter = document.getElementById("counter");
 
-console.log("TaskFlow engine loaded successfully!", tasks);
 
-// DISPLAY ENGINE: RENDER TASKS FROM MEMORY TO THE SCREEN
+// =====================================
+// RENDER TASKS
+// =====================================
+
 function renderTasks() {
+
+    // Clear the current list
     list.innerHTML = "";
 
+
+    // Create each task
     tasks.forEach(task => {
+
         const li = document.createElement("li");
+
+        // Add task classes
         li.className = `item ${task.completed ? "done" : ""}`;
-        
+
+        // Store Firestore document ID
+        li.dataset.id = task.id;
+
+
+        // Create task HTML
         li.innerHTML = `
             <div class="row">
-                <input type="checkbox" class="check" ${task.completed ? "checked" : ""}>
+
+                <input
+                    type="checkbox"
+                    class="check"
+                    ${task.completed ? "checked" : ""}
+                >
+
                 <span class="text"></span>
+
             </div>
+
             <div class="actions">
-                <button class="edit">Edit</button>
-                <button class="del">Delete</button>
+
+                <button class="edit">
+                    Edit
+                </button>
+
+                <button class="del">
+                    Delete
+                </button>
+
             </div>
         `;
 
+
+        // Add task title safely
         li.querySelector(".text").textContent = task.title;
+
+
+        // Add task to the page
         list.appendChild(li);
+
     });
 
-    const activeTasks = tasks.filter(t => !t.completed).length;
+
+    // Count unfinished tasks
+    const activeTasks = tasks.filter(
+        task => !task.completed
+    ).length;
+
+
+    // Update counter
     counter.textContent = `${activeTasks} left`;
 }
 
-// Run the engine instantly when the script loads to draw our array items
-renderTasks();
+
+// =====================================
+// LOAD TASKS FROM FIRESTORE
+// =====================================
+
+async function loadTasks() {
+
+    try {
+
+        // Get all documents from tasks collection
+        const snapshot = await getDocs(tasksCollection);
 
 
-// ➕ ADD TASK FUNCTIONALITY
-form.addEventListener("submit", (event) => {
-    // Stop the page from refreshing automatically
+        // Convert Firestore documents into JavaScript objects
+        tasks = snapshot.docs.map(document => ({
+
+            id: document.id,
+
+            ...document.data()
+
+        }));
+
+
+        // Display tasks
+        renderTasks();
+
+
+        console.log("Tasks loaded successfully:", tasks);
+
+    } catch (error) {
+
+        console.error("Error loading tasks:", error);
+
+        alert("Could not load tasks from Firebase.");
+
+    }
+}
+
+
+// =====================================
+// ADD NEW TASK
+// =====================================
+
+form.addEventListener("submit", async (event) => {
+
+    // Prevent page refresh
     event.preventDefault();
 
-    // Get the typed text and remove extra spaces at the ends
+
+    // Get task text
     const taskTitle = input.value.trim();
 
-    // Validation: Reject empty text or spaces
+
+    // Check if empty
     if (taskTitle === "") {
+
         alert("Task cannot be empty!");
+
         return;
     }
 
-    // Create a new task object with a simple timestamp ID
-    const newTask = {
-        id: "t_" + Date.now(),
-        title: taskTitle,
-        completed: false
-    };
 
-    // Add the new object to the front of our array list
-    tasks.unshift(newTask);
+    try {
 
-    // Re-render the screen to show the new item instantly
-    renderTasks();
+        // Create task data
+        const taskData = {
 
-    // Clear out the input field text box for the next task
-    form.reset();
+            title: taskTitle,
+
+            completed: false
+
+        };
+
+
+        // Save task to Firestore
+        const documentReference = await addDoc(
+            tasksCollection,
+            taskData
+        );
+
+
+        // Add task to local array
+        tasks.unshift({
+
+            id: documentReference.id,
+
+            ...taskData
+
+        });
+
+
+        // Update screen
+        renderTasks();
+
+
+        // Clear input
+        form.reset();
+
+
+        console.log("Task added successfully!");
+
+    } catch (error) {
+
+        console.error("Error adding task:", error);
+
+        alert("Could not add task.");
+
+    }
+
 });
 
 
-// ⚡ EVENT DELEGATION LISTENER (HANDLES CHECKBOX & DELETE CLICKS)
-list.addEventListener("click", (event) => {
-    // 1. FIND THE EXACT CURRENT CARD ITEM LI COMPONENT BEING CLICKED
+// =====================================
+// TASK ACTIONS
+// DELETE / COMPLETE / EDIT
+// =====================================
+
+list.addEventListener("click", async (event) => {
+
+    // Find the task element
     const itemElement = event.target.closest(".item");
+
+
+    // Stop if nothing was clicked
     if (!itemElement) return;
 
-    // Find the text title of this task so we know which one to look for
-    const taskTitle = itemElement.querySelector(".text").textContent;
-    
-    // Find the index location position of this task inside our array structure
-    const taskIndex = tasks.findIndex(t => t.title === taskTitle);
 
-    // 🗑️ CASE A: IF THE USER CLICKED THE DELETE BUTTON ELEMENT
+    // Get Firestore document ID
+    const taskId = itemElement.dataset.id;
+
+
+    // Find task in local array
+    const taskIndex = tasks.findIndex(
+        task => task.id === taskId
+    );
+
+
+    // Stop if task doesn't exist
+    if (taskIndex === -1) return;
+
+
+    // =================================
+    // DELETE TASK
+    // =================================
+
     if (event.target.classList.contains("del")) {
-        // Ask for standard system confirmation as requested in your brief guidelines
-        const confirmDelete = confirm(`Are you sure you want to delete "${taskTitle}"?`);
-        
-        if (confirmDelete) {
-            // Remove the targeted item from our local array memory channel
+
+        const taskTitle = tasks[taskIndex].title;
+
+
+        // Confirmation message
+        const confirmDelete = confirm(
+            `Are you sure you want to delete "${taskTitle}"?`
+        );
+
+
+        if (!confirmDelete) return;
+
+
+        try {
+
+            // Delete from Firestore
+            await deleteDoc(
+                doc(db, "tasks", taskId)
+            );
+
+
+            // Delete from local array
             tasks.splice(taskIndex, 1);
-            // Re-render the screen to update layout tracks and counter fields instantly
+
+
+            // Update screen
             renderTasks();
+
+
+            console.log("Task deleted successfully!");
+
+        } catch (error) {
+
+            console.error("Error deleting task:", error);
+
+            alert("Could not delete task.");
+
         }
+
     }
 
-    // ⬜ CASE B: IF THE USER TOGGLED THE COMPLETION STATUS CHECKBOX ELEMENT
+
+    // =================================
+    // COMPLETE TASK
+    // =================================
+
     if (event.target.classList.contains("check")) {
-        // Invert the completed true/false value flag inside our data model array row
-        tasks[taskIndex].completed = event.target.checked;
-        // Re-render the screen to update strikethroughs and active totals immediately
-        renderTasks();
+
+        const completed = event.target.checked;
+
+
+        try {
+
+            // Update Firestore
+            await updateDoc(
+                doc(db, "tasks", taskId),
+                {
+                    completed: completed
+                }
+            );
+
+
+            // Update local array
+            tasks[taskIndex].completed = completed;
+
+
+            // Update screen
+            renderTasks();
+
+
+            console.log("Task status updated!");
+
+        } catch (error) {
+
+            console.error("Error updating task:", error);
+
+            alert("Could not update task.");
+
+        }
+
     }
+
+
+    // =================================
+    // EDIT TASK
+    // =================================
+
+    if (event.target.classList.contains("edit")) {
+
+        const oldTitle = tasks[taskIndex].title;
+
+
+        // Ask for new title
+        const newTitle = prompt(
+            "Edit task:",
+            oldTitle
+        );
+
+
+        // User pressed Cancel
+        if (newTitle === null) return;
+
+
+        // Remove extra spaces
+        const trimmedTitle = newTitle.trim();
+
+
+        // Check empty title
+        if (trimmedTitle === "") {
+
+            alert("Task cannot be empty!");
+
+            return;
+        }
+
+
+        try {
+
+            // Update Firestore
+            await updateDoc(
+                doc(db, "tasks", taskId),
+                {
+                    title: trimmedTitle
+                }
+            );
+
+
+            // Update local array
+            tasks[taskIndex].title = trimmedTitle;
+
+
+            // Update screen
+            renderTasks();
+
+
+            console.log("Task edited successfully!");
+
+        } catch (error) {
+
+            console.error("Error editing task:", error);
+
+            alert("Could not edit task.");
+
+        }
+
+    }
+
 });
+
+
+// =====================================
+// FILTER BUTTONS
+// =====================================
+
+const filterButtons = document.querySelectorAll(".tabs .btn");
+
+
+filterButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+
+        // Add active class to clicked button
+        button.classList.add("active");
+
+
+        // Get selected filter
+        const filter = button.textContent.trim();
+
+
+        // Filter tasks
+        if (filter === "All") {
+
+            renderTasks();
+
+        }
+
+        else if (filter === "Active") {
+
+            renderFilteredTasks(
+                tasks.filter(task => !task.completed)
+            );
+
+        }
+
+        else if (filter === "Done") {
+
+            renderFilteredTasks(
+                tasks.filter(task => task.completed)
+            );
+
+        }
+
+    });
+
+});
+
+
+// =====================================
+// RENDER FILTERED TASKS
+// =====================================
+
+function renderFilteredTasks(filteredTasks) {
+
+    list.innerHTML = "";
+
+
+    filteredTasks.forEach(task => {
+
+        const li = document.createElement("li");
+
+        li.className = `item ${task.completed ? "done" : ""}`;
+
+        li.dataset.id = task.id;
+
+
+        li.innerHTML = `
+            <div class="row">
+
+                <input
+                    type="checkbox"
+                    class="check"
+                    ${task.completed ? "checked" : ""}
+                >
+
+                <span class="text"></span>
+
+            </div>
+
+            <div class="actions">
+
+                <button class="edit">
+                    Edit
+                </button>
+
+                <button class="del">
+                    Delete
+                </button>
+
+            </div>
+        `;
+
+
+        li.querySelector(".text").textContent = task.title;
+
+        list.appendChild(li);
+
+    });
+
+}
+
+
+// =====================================
+// START TASKFLOW
+// =====================================
+
+loadTasks();
