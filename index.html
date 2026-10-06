@@ -3,91 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskFlow</title>
-    <script type="module" src="app.js"></script>
+
+    <title>TaskFlow | Smart Task Manager</title>
+
     <link rel="stylesheet" href="style.css">
+    <script type="module" src="app.js"></script>
 </head>
+
 <body>
 
-    <div class="box">
-        <header>
-            <h1>TaskFlow</h1>
-            <p id="counter">3 left</p>
-        </header>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <div class="nav-container">
 
-        <main>
-            <!-- FORM -->
-            <form id="form">
-                <input type="text" id="input" placeholder="New task..." required>
-                <button type="submit" id="add">Add</button>
-            </form>
+            <a href="#" class="logo">
+                <span class="logo-icon">✓</span>
+                TaskFlow
+            </a>
 
-            <!-- FILTERS -->
-            <div class="tabs">
-                <button class="btn active">All</button>
-                <button class="btn">Active</button>
-                <button class="btn">Done</button>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#tasks">Tasks</a>
+                <a href="#about">About</a>
             </div>
 
-            <!-- TASK LIST -->
-            <ul id="list">
-                <!-- Task 1 -->
-                <li class="item">
-                    <div class="row">
-                        <input type="checkbox" id="t1" class="check">
-                        <label for="t1" class="text">Learn HTML</label>
-                    </div>
-                    <div class="actions">
-                        <button class="edit">Edit</button>
-                        <button class="del">Delete</button>
-                    </div>
-                </li>
+            <a href="#tasks" class="nav-button">Get Started</a>
 
-                <!-- Task 2 -->
-                <li class="item done">
-                    <div class="row">
-                        <input type="checkbox" id="t2" class="check" checked>
-                        <label for="t2" class="text">Create folder</label>
-                    </div>
-                    <div class="actions">
-                        <button class="edit">Edit</button>
-                        <button class="del">Delete</button>
-                    </div>
-                </li>
+        </div>
+    </nav>
 
-                <!-- Task 3 -->
-                <li class="item">
-                    <div class="row">
-                        <input type="checkbox" id="t3" class="check">
-                        <label for="t3" class="text">Read rules</label>
-                    </div>
-                    <div class="actions">
-                        <button class="edit">Edit</button>
-                        <button class="del">Delete</button>
-                    </div>
-                </li>
-            </ul>
-        </main>
-    </div>
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "REMOVED_API_KEY",
-    authDomain: "taskflow-app-5b420.firebaseapp.com",
-    projectId: "taskflow-app-5b420",
-    storageBucket: "taskflow-app-5b420.firebasestorage.app",
-    messagingSenderId: "941988575431",
-    appId: "1:941988575431:web:5dffb053724685791766e2"
-  } ;
+    <!-- HERO / BANNER -->
+    <section class="hero" id="home">
+        <div class="hero-content">
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
+            <div class="hero-badge">
+                ✦ Stay organized. Stay focused.
+            </div>
+
+            <h1>
+                Organize your day,
+                <span>one task at a time.</span>
+            </h1>
+
+            <p>
+                TaskFlow helps you manage your tasks, track your progress,
+                and keep your day moving forward.
+            </p>
+
+            <a href="#tasks" class="hero-button">
+                Start Managing Tasks →
+            </a>
+
+        </div>
+
+        <div class="hero-card">
+            <div class="mini-card-top">
+                <span>Today's Progress</span>
+                <span class="progress-icon">✓</span>
+            </div>
+
+            <div class="progress-number">Stay Productive</div>
+
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+
+            <p>Complete your tasks and reach your goals.</p>
+        </div>
+    </section>
+
+
+    <!-- TASK APPLICATION -->
+    <main class="box" id="tasks">
+
+        <header class="task-header">
+            <div>
+                <p class="section-label">MY WORKSPACE</p>
+                <h2>My Tasks</h2>
+            </div>
+
+            <p id="counter">0 left</p>
+        </header>
+
+
+        <!-- ADD TASK FORM -->
+        <form id="form">
+
+            <label for="input" class="sr-only">
+                Enter a new task
+            </label>
+
+            <div class="input-wrapper">
+                <span class="input-icon">+</span>
+
+                <input
+                    type="text"
+                    id="input"
+                    placeholder="What needs to be done?"
+                    maxlength="100"
+                >
+            </div>
+
+            <button type="submit" id="add">
+                Add Task
+            </button>
+
+        </form>
+
+
+        <!-- FILTERS -->
+        <div class="tabs" aria-label="Task filters">
+
+            <button type="button" class="btn active">
+                All
+            </button>
+
+            <button type="button" class="btn">
+                Active
+            </button>
+
+            <button type="button" class="btn">
+                Completed
+            </button>
+
+        </div>
+
+
+        <!-- TASK LIST -->
+        <ul id="list">
+
+            <!-- JavaScript will add Firestore tasks here -->
+
+        </ul>
+
+    </main>
+
+
+    <!-- ABOUT SECTION -->
+    <section class="about" id="about">
+
+        <div>
+            <p class="section-label">ABOUT TASKFLOW</p>
+
+            <h2>
+                Simple tools for
+                <span>better productivity.</span>
+            </h2>
+
+            <p>
+                TaskFlow makes it easy to create, organize, complete,
+                and manage your daily tasks in one simple workspace.
+            </p>
+        </div>
+
+        <div class="about-features">
+
+            <div class="feature">
+                <strong>✓</strong>
+                <div>
+                    <h3>Stay Organized</h3>
+                    <p>Keep all your tasks in one place.</p>
+                </div>
+            </div>
+
+            <div class="feature">
+                <strong>⚡</strong>
+                <div>
+                    <h3>Work Faster</h3>
+                    <p>Focus on what needs to be done.</p>
+                </div>
+            </div>
+
+            <div class="feature">
+                <strong>☁</strong>
+                <div>
+                    <h3>Cloud Storage</h3>
+                    <p>Your tasks stay saved with Firebase.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 TaskFlow. Built for better productivity by Ritha I..</p>
+    </footer>
 
 </body>
 </html>
