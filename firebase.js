@@ -11,7 +11,7 @@ import {
 
 // Your Firebase configuration
 const firebaseConfig = {
-   
+   apiKey: "process.env.GOOGLE_API_KEY",
     authDomain: "taskflow-app-5b420.firebaseapp.com",
     projectId: "taskflow-app-5b420",
     storageBucket: "taskflow-app-5b420.firebasestorage.app",
