@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>TaskFlow | Smart Task Manager</title>
+    <title>TaskFlow</title>
 
     <link rel="stylesheet" href="style.css">
     <script type="module" src="app.js"></script>
@@ -12,7 +12,7 @@
 
 <body>
 
-    <!-- NAVIGATION BAR -->
+    <!-- nav bar -->
     <nav class="navbar">
         <div class="nav-container">
 
@@ -33,7 +33,7 @@
     </nav>
 
 
-    <!-- HERO / BANNER -->
+   <!-- banner -->
     <section class="hero" id="home">
         <div class="hero-content">
 
@@ -74,7 +74,7 @@
     </section>
 
 
-    <!-- TASK APPLICATION -->
+    <!-- task application -->
     <main class="box" id="tasks">
 
         <header class="task-header">
@@ -87,7 +87,7 @@
         </header>
 
 
-        <!-- ADD TASK FORM -->
+       <!-- add task form -->
         <form id="form">
 
             <label for="input" class="sr-only">
@@ -112,7 +112,7 @@
         </form>
 
 
-        <!-- FILTERS -->
+        <!-- filters -->
         <div class="tabs" aria-label="Task filters">
 
             <button type="button" class="btn active">
@@ -124,23 +124,28 @@
             </button>
 
             <button type="button" class="btn">
-                Completed
+                Done
             </button>
 
         </div>
 
 
-        <!-- TASK LIST -->
+
+        <div id="loading" class="loading" hidden>
+    Please wait...
+</div>
+
+       <!-- task list -->
         <ul id="list">
 
-            <!-- JavaScript will add Firestore tasks here -->
+       
 
         </ul>
 
     </main>
 
 
-    <!-- ABOUT SECTION -->
+   <!-- about section -->
     <section class="about" id="about">
 
         <div>
